@@ -1,6 +1,10 @@
 from MonteCarlo import MonteCarlo
+from mc import simulate2
+from mc import generateRandomNumbers2
 from statistics import fmean, quantiles, median 
 import matplotlib.pyplot as plt
+import numpy as np
+from scipy.interpolate import CubicSpline
 from math import exp
 
 def probability(W, bound, dir="<="):
@@ -16,28 +20,43 @@ def probability(W, bound, dir="<="):
         return 1 - count / len(W)
     
 
-def graph(sample, mean):
-    
-    v = 1/mean 
-    P = []
-    w = sorted(sample)
+def graph(realizations):
+    # sorted_realizations = sorted(realizations, key=lambda x: x[0])
+    # w = [d[0] for d in sorted_realizations]
+    # p = [d[1] for d in sorted_realizations]
+    # cdf = np.cumsum(p)
+    # cdf_normalized = [p / cdf[-1]]
+    #
+    w_values = [x[0] for x in realizations]
+    probabilities = [x[1] for x in realizations]
 
-    for i in range(len(w)):
-        p = 1 - exp(-v * w[i])
-        P.append(p)
-    
-    plt.plot(w, P)
+    sorted_indices = np.argsort(w_values)
+    sorted_w_values = np.array(w_values)[sorted_indices]
+    sorted_probabilities = np.array(probabilities)[sorted_indices]
+
+
+    cdf = np.cumsum(sorted_probabilities)
+    cdf_normalized = cdf / cdf[-1]
+
+    plt.plot(sorted_w_values, cdf_normalized)
     plt.title("Cumulative Distribution Function of W")
     plt.ylabel("P(W <= w)")
     plt.xlabel("Total Time Calling One Customer, W, (seconds)")
     plt.show()
 
 if __name__ == "__main__":
-    mc = MonteCarlo(1000)
-    rand = mc.generateRandomNumbers()
+    # mc = MonteCarlo(1000)
+    # rand = mc.generateRandomNumbers()
+    rand = generateRandomNumbers2(1000)
     print("u51, u52, u53: ", rand[50:53])
-    sample = mc.simulate()
-    print("Examples from sample: ", sample[0:5])
+    # sample = mc.simulate()
+    realizations = simulate2(1000)
+    print(realizations)
+    sample = []
+    prob = []
+    for i in range(len(realizations)):
+        sample.append(realizations[i][0])
+        prob.append(realizations[i][1])
     
     mean = fmean(sample)
     print("Mean of sample: ", '%.6f'%(mean))
@@ -60,13 +79,12 @@ if __name__ == "__main__":
 
     _w_5 = probability(sample, 80, ">")
     print("P(W > 80): ", '%.6f'%(_w_5))
-    _w_6 = probability(sample, 115, ">")
-    print("P(W > 115): ", '%.6f'%(_w_6))
-    _w_7 = probability(sample, 135, ">")
-    print("P(W > 135): ", '%.6f'%(_w_7))
+    _w_6 = probability(sample, 100, ">")
+    print("P(W > 100): ", '%.6f'%(_w_6))
+    _w_7 = probability(sample, 120, ">")
+    print("P(W > 120): ", '%.6f'%(_w_7))
 
     upper = max(sample)
     lower = min(sample)
     print("The sample space of W is: ", '%.6f'%(lower), "<=  w  <=", '%.6f'%(upper))
-
-    graph(sample, mean)
+    graph(realizations)

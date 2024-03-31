@@ -20,6 +20,8 @@ class MonteCarlo:
             nums.append(ui)
 
         return nums
+
+
     
     
     def generateRandomVariable(self, u):
@@ -65,4 +67,4 @@ class MonteCarlo:
             probabilities.append(p)
 
         return realizations
-    
+
