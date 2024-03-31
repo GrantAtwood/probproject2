@@ -33,28 +33,36 @@ class MonteCarlo:
         callOutcomes = ["Available", "Unavailable", "Busy Tone"]   
         answerOutcomes = ["Answer", "No Answer"]
         realizations = []
+        probabilities = []
 
         for iteration in range(self.n):
             w = 0
+            p = 1
 
             for a in range(4):
                 w += 6 
                 outcome = choices(callOutcomes, [0.5, 0.3, 0.2], k=1)[0]
 
                 if outcome == "Available":
+                    p *= 0.5
                     answer = choices(answerOutcomes, [0.8755, 0.1245], k=1)[0]
                     if answer == "Answer":
+                        p *= 0.8755
                         x = self.generateRandomVariable(randNums[iteration])
                         w += x
                         break
                     elif answer == "No Answer":
+                        p *= 0.1245
                         w += 26
                 elif outcome == "Unavailable":
+                    p *= 0.3
                     w += 26
                 elif outcome == "Busy Tone":
+                    p *= 0.2
                     w += 4
 
             realizations.append(w)
+            probabilities.append(p)
 
         return realizations
     
