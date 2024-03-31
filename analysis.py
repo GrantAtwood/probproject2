@@ -14,6 +14,7 @@ def probability(W, bound, dir="<="):
         return count / len(W)
     elif dir == ">":
         return 1 - count / len(W)
+    
 
 def graph(sample, mean):
     
@@ -31,24 +32,6 @@ def graph(sample, mean):
     plt.xlabel("Total Time Calling One Customer, W, (seconds)")
     plt.show()
 
-
-    '''
-        ordered_pairs = []
-
-        for i in range(len(sample)):
-            ordered_pairs.append((sample[i], probs[i]))
-        
-        ordered_pairs.sort(key=lambda pair: pair[0])
-
-        w = [pair[0] for pair in ordered_pairs]
-        p = [pair[1] for pair in ordered_pairs]
-
-        
-        plt.plot(w, p)
-        plt.ylabel("Total Time Calling One Customer (seconds)")
-        plt.show()
-    '''
-    
 if __name__ == "__main__":
     mc = MonteCarlo(1000)
     sample = mc.simulate()
@@ -73,7 +56,12 @@ if __name__ == "__main__":
     w_40 = probability(sample, 40, ">")
     print("P(W > 40): ", '%.6f'%(w_40))
 
-    
+    _w_5 = probability(sample, 80, ">")
+    print("P(W > 80): ", '%.6f'%(_w_5))
+    _w_6 = probability(sample, 115, ">")
+    print("P(W > 115): ", '%.6f'%(_w_6))
+    _w_7 = probability(sample, 135, ">")
+    print("P(W > 135): ", '%.6f'%(_w_7))
 
     upper = max(sample)
     lower = min(sample)
