@@ -34,6 +34,8 @@ def graph(sample, mean):
 
 if __name__ == "__main__":
     mc = MonteCarlo(1000)
+    rand = mc.generateRandomNumbers()
+    print("u51, u52, u53: ", rand[50:53])
     sample = mc.simulate()
     print("Examples from sample: ", sample[0:5])
     
