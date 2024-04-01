@@ -32,10 +32,11 @@ def simulate2(count):
                 if rand <= 0.2:
                     p *= 0.2
                     w += 4
-                if 0.2 < rand <= 0.5:
+                elif 0.2 < rand <= 0.5:
                     w += 26
                     p *= 0.3
                 else:
+                    rand = (rand-0.5)*2
                     time = generateRandomVariable2(rand)
                     p *= 0.5*rand
                     if time >= 25:

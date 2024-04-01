@@ -1,11 +1,9 @@
 from MonteCarlo import MonteCarlo
 from mc import simulate2
 from mc import generateRandomNumbers2
-from statistics import fmean, quantiles, median 
+from statistics import fmean, quantiles, median
 import matplotlib.pyplot as plt
-import numpy as np
-from scipy.interpolate import CubicSpline
-from math import exp
+from statsmodels.distributions.empirical_distribution import ECDF
 
 def probability(W, bound, dir="<="):
     count = 0
@@ -20,25 +18,10 @@ def probability(W, bound, dir="<="):
         return 1 - count / len(W)
     
 
-def graph(realizations):
-    # sorted_realizations = sorted(realizations, key=lambda x: x[0])
-    # w = [d[0] for d in sorted_realizations]
-    # p = [d[1] for d in sorted_realizations]
-    # cdf = np.cumsum(p)
-    # cdf_normalized = [p / cdf[-1]]
-    #
-    w_values = [x[0] for x in realizations]
-    probabilities = [x[1] for x in realizations]
-
-    sorted_indices = np.argsort(w_values)
-    sorted_w_values = np.array(w_values)[sorted_indices]
-    sorted_probabilities = np.array(probabilities)[sorted_indices]
-
-
-    cdf = np.cumsum(sorted_probabilities)
-    cdf_normalized = cdf / cdf[-1]
-
-    plt.plot(sorted_w_values, cdf_normalized)
+def graph(sample):
+    ecdf = ECDF(sample)
+    unique_values, ecdf_values = ecdf.x, ecdf.y
+    plt.plot(unique_values, ecdf_values)
     plt.title("Cumulative Distribution Function of W")
     plt.ylabel("P(W <= w)")
     plt.xlabel("Total Time Calling One Customer, W, (seconds)")
@@ -87,4 +70,4 @@ if __name__ == "__main__":
     upper = max(sample)
     lower = min(sample)
     print("The sample space of W is: ", '%.6f'%(lower), "<=  w  <=", '%.6f'%(upper))
-    graph(realizations)
+    graph(sample)
