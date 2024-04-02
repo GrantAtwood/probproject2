@@ -27,7 +27,7 @@ def simulate2(count):
             w = 0
             p = 1
             for a in range(4):
-                rand = generateRandomNumbers2(i+increment)[-1]
+                rand = generateRandomNumbers2(i+a+1)[-1]
                 w += 6
                 if rand <= 0.2:
                     p *= 0.2
@@ -38,11 +38,13 @@ def simulate2(count):
                 else:
                     rand = (rand-0.5)*2
                     time = generateRandomVariable2(rand)
-                    p *= 0.5*rand
+                    p *= 0.5
                     if time >= 25:
                         w += 26
+                        p *= 0.1245
                     else:
                         w += time
+                        p *= 0.8755
                         break
                 increment += 1
             realizations.append((w,p))
